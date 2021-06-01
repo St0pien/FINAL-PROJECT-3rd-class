@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -37,11 +39,18 @@ body {
     left: 0;
     z-index: 10;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
+    padding: 0 2em;
+    font-family: 'Consolas', sans-serif;
 }
 
 .turn {
     font-size: 2em;
-    font-family: 'Consolas', sans-serif;
+}
+
+.action {
+    margin: 0 1em;
+    font-size: 2em;
+    color: rgb(0, 110, 255);
 }

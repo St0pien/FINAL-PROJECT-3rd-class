@@ -7,6 +7,7 @@ export default class Input {
             backward: false,
             left: false,
             right: false,
+            action: false
         }
 
         this.mouse = {
@@ -45,6 +46,9 @@ export default class Input {
                 break;
             case 68: // d
                 this.keys.right = true;
+                break;
+            case 32: // space
+                this.keys.action = true;
                 break;
         }
     }

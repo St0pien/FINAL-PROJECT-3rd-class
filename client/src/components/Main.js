@@ -48,7 +48,7 @@ export default class Main {
 
     async init() {
         await loadModels();
-        this.network = new Network(this.scene, this.io, this.boardSize);
+        this.network = new Network(this.scene, this.io, this.input, this.toolbar, this.boardSize);
         this.network.placePlayer(this.startingPosition);
         this.network.placeEnemy(this.enemyPosition);
         this.network.placeTarget(this.target);

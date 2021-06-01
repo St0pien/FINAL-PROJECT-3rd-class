@@ -12,6 +12,10 @@ export default class Toolbar {
         this.io.on('turn', isMyTurn => {
             this.showTurn(isMyTurn);
         });
+
+        this.actionIndicator = document.createElement('div');
+        this.actionIndicator.classList.add('action');
+        this.ref.appendChild(this.actionIndicator);
     }
 
     showTurn(isMyTurn) {
@@ -22,5 +26,9 @@ export default class Toolbar {
             this.turnIndicator.innerHTML = 'Enemy turn';
             this.turnIndicator.style.color = 'red';
         }
+    }
+
+    setAction(action) {
+        this.actionIndicator.innerHTML = action
     }
 }

@@ -54,7 +54,7 @@ export default class Camera extends PerspectiveCamera {
                 const clicked = intersects[0].object;
                 clicked.traverseAncestors(a => {
                     if (a instanceof Node) {
-                        a.capture();
+                        a.onClick();
                     }
                 })
             }

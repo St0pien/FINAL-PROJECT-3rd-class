@@ -1,6 +1,7 @@
-import { AnimationMixer, LoopOnce, Group, PointLight } from "three";
+import { AnimationMixer, LoopOnce, Group, PointLight, Vector3 } from "three";
 import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
 import getModel from "../loaders/Models";
+import LevelSprite from "./LevelSprite";
 
 export default class Node extends Group {
     constructor(scene, cords, io) {
@@ -9,10 +10,13 @@ export default class Node extends Group {
         this.scene.add(this);
         this.cords= cords;
         this.level = 1;
+        this.selected = false;
         this.captured = false;
         this.isOwnedByPlayer = false;
         this.io = io;
         this.loadModel();
+
+        this.onClick = () => null;
     }
 
     loadModel() {
@@ -34,6 +38,8 @@ export default class Node extends Group {
         this.light = new PointLight(0xffffff, 0, 50, 2);
         this.light.position.set(0, 5, 0);
         this.add(this.light);
+
+        this.label = new LevelSprite(this.scene, this.level, 'blue');
     }
 
     capture() {
@@ -41,6 +47,14 @@ export default class Node extends Group {
             type: 'capture',
             cords: this.cords
         })
+    }
+
+    deselect() {
+        this.selected = false;
+    }
+    
+    select() {
+        this.selected = true;
     }
 
     onCapture() {
@@ -67,6 +81,12 @@ export default class Node extends Group {
 
         if (this.captured) {
             this.rotation.y += 0.01;
+        }
+
+        if (this.selected) {
+            this.mesh.position.lerp(new Vector3(0, 150, 0), timeElapsed*3);
+        } else {
+            this.mesh.position.lerp(new Vector3(0, 0, 0), timeElapsed*3);
         }
     }
 }
