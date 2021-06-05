@@ -12,6 +12,10 @@ class NetworkNode {
     capture(playerid) {
         this.ownedBy = playerid;
     }
+
+    fortify() {
+        this.level++;
+    }
 }
 
 module.exports = NetworkNode;

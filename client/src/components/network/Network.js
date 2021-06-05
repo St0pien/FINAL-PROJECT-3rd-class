@@ -15,10 +15,16 @@ export default class Network {
         this.connections = [];
         this.spawnNodes();
 
+        this.availableAction = null;
+
         this.io.on('move', ({ type, cords }) => {
             switch (type) {
                 case 'capture':
                     this.onCapture(cords);
+                    break;
+
+                case 'fortify':
+                    this.nodes[cords[0]][cords[1]].onFortify();
                     break;
             }
         });
@@ -27,6 +33,12 @@ export default class Network {
             switch (type) {
                 case 'capture':
                     this.onEnemyCapture(cords);
+                    break;
+
+                case 'fortify':
+                    this.nodes[cords[0]][cords[1]].onFortify();
+                    this.nodes[cords[0]][cords[1]].deselect();
+                    this.toolbar.setAction('');
                     break;
             }
         });
@@ -44,14 +56,14 @@ export default class Network {
                 const z = i * (this.nodeSize + this.space) - width * (this.nodeSize + this.space) / 2;
                 const x = j * (this.nodeSize + this.space) - height * (this.nodeSize + this.space) / 2;
                 node.position.set(x, 0, z);
-                node.label.sprite.position.set(x-3, -1, z-2);
+                node.label.sprite.position.set(x - 3, -1, z - 2);
 
                 this.nodes[i][j] = node;
             }
         }
     }
 
-    findNodesinRange(cords, range, ownedByPlayer=true) {
+    findNodesinRange(cords, range, ownedByPlayer = true) {
         const nodes = this.nodes.reduce((a, n) => [...n, ...a]);
         let ownedNodes = nodes.filter(n => n.isOwnedByPlayer == ownedByPlayer && n.captured);
         ownedNodes = ownedNodes.filter(n => n.cords[0] != cords[0] || n.cords[1] != cords[1]);
@@ -71,27 +83,25 @@ export default class Network {
         this.selectedNode.select();
 
         if (this.selectedNode.captured && !this.selectedNode.isOwnedByPlayer) {
+            this.availableAction = 'attack';
             this.toolbar.setAction('Attack');
             return;
         }
 
         if (this.selectedNode.isOwnedByPlayer) {
+            this.availableAction = 'fortify';
             this.toolbar.setAction('Fortify');
             return;
         }
 
         if (this.findNodesinRange([i, j], 1).length > 0) {
+            this.availableAction = 'capture';
             this.toolbar.setAction('Capture');
             return;
         }
 
+        this.availableAction = null;
         this.toolbar.setAction('Unreachable');
-    }
-
-    update() {
-        if (this.selectedNode.captured && !this.selectedNode.ownedByPlayer) {
-            return 'Attack';
-        }
     }
 
     placePlayer(cords) {
@@ -153,13 +163,22 @@ export default class Network {
         const parents = this.findNodesinRange(cords, 1, false);
         parents.forEach(parent => {
             this.connections.push(new Connection(this.scene, parent.position, this.nodes[r][c].position, 0xff0000));
-        })        
+        })
     }
 
     update(timeElapsed) {
         if (this.input.keys.action && this.selectedNode) {
             if (this.findNodesinRange(this.selectedNode.cords, 1).length > 0) {
                 this.selectedNode.capture();
+            }
+            switch (this.availableAction) {
+                case 'capture':
+                    this.selectedNode.capture();
+                    break;
+
+                case 'fortify':
+                    this.selectedNode.fortify();
+                    break;
             }
 
             this.input.keys.action = false;

@@ -1,4 +1,4 @@
-import { AnimationMixer, LoopOnce, Group, PointLight, Vector3 } from "three";
+import { AnimationMixer, LoopOnce, Group, PointLight, Vector3, MathUtils } from "three";
 import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
 import getModel from "../loaders/Models";
 import LevelSprite from "./LevelSprite";
@@ -15,6 +15,8 @@ export default class Node extends Group {
         this.isOwnedByPlayer = false;
         this.io = io;
         this.loadModel();
+
+        this.speed = 0.01;
 
         this.onClick = () => null;
     }
@@ -37,7 +39,7 @@ export default class Node extends Group {
 
         this.light = new PointLight(0xffffff, 0, 50, 2);
         this.light.position.set(0, 5, 0);
-        this.add(this.light);
+        // this.add(this.light);
 
         this.label = new LevelSprite(this.scene, this.level, 'blue');
     }
@@ -45,6 +47,13 @@ export default class Node extends Group {
     capture() {
         this.io.emit('move', {
             type: 'capture',
+            cords: this.cords
+        })
+    }
+
+    fortify() {
+        this.io.emit('move', {
+            type: 'fortify',
             cords: this.cords
         })
     }
@@ -76,11 +85,19 @@ export default class Node extends Group {
         this.light.color.setHex(0xff0000);
     }
 
+    onFortify() {
+        this.level++;
+        this.label.updateLevel(this.level);
+        this.speed = 0.2;
+        console.log(this.level);
+    }
+
     update(timeElapsed) {
         this.mixer.update(timeElapsed);
 
         if (this.captured) {
-            this.rotation.y += 0.01;
+            this.speed = MathUtils.lerp(this.speed, 0.01, timeElapsed);
+            this.rotation.y += this.speed;
         }
 
         if (this.selected) {

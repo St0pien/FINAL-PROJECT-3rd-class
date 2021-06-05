@@ -58,6 +58,9 @@ class Game {
                     case 'capture':
                         this.onCapture(p, cords);
                         break;
+                    case 'fortify':
+                        this.onFortify(p, cords);
+                        break;
                 }
             });
         });
@@ -93,6 +96,27 @@ class Game {
         });
         this.getEnemy(this.currentPlayer).socket.emit('enemyMove', {
             type: 'capture',
+            cords
+        })
+
+        this.nextPlayer();
+    }
+
+    onFortify(player, cords) {
+        if (this.currentPlayer.id != player.id) return;
+        const [r, c] = cords;
+        const node = this.nodes[r][c];
+
+        if (node.ownedBy != player.id) return;
+
+        node.fortify();
+
+        this.currentPlayer.socket.emit('move', {
+            type: 'fortify',
+            cords
+        });
+        this.getEnemy(this.currentPlayer).socket.emit('enemyMove', {
+            type: 'fortify',
             cords
         })
 

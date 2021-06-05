@@ -22,4 +22,10 @@ export default class LevelSprite {
 
         parent.add(this.sprite);
     }
+
+    updateLevel(level) {
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.ctx.fillText(level, 256, 390);
+        this.texture.needsUpdate = true;
+    }
 }
