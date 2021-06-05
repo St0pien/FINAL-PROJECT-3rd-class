@@ -89,7 +89,6 @@ export default class Node extends Group {
         this.level++;
         this.label.updateLevel(this.level);
         this.speed = 0.2;
-        console.log(this.level);
     }
 
     update(timeElapsed) {

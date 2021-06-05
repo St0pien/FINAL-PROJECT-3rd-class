@@ -25,6 +25,8 @@ export default class Network {
 
                 case 'fortify':
                     this.nodes[cords[0]][cords[1]].onFortify();
+                    this.selectedNode.deselect();
+                    this.toolbar.setAction('');
                     break;
             }
         });
@@ -37,8 +39,7 @@ export default class Network {
 
                 case 'fortify':
                     this.nodes[cords[0]][cords[1]].onFortify();
-                    this.nodes[cords[0]][cords[1]].deselect();
-                    this.toolbar.setAction('');
+                    
                     break;
             }
         });
