@@ -170,8 +170,7 @@ class Game {
 
         if (node.ownedBy != this.getEnemy(player).id) return;
 
-        if (this.findNodesinRange(player.id, cords, 20).length <= 0) return;
-        // TODO: Check if in range
+        if (this.findNodesinRange(player.id, cords, 3).length <= 0) return;
 
         const success = node.attack();
         if (success) {
@@ -186,7 +185,7 @@ class Game {
             });
             this.getEnemy(this.currentPlayer).socket.emit('enemyMove', {
                 type: 'attack',
-                cords: affectedCords
+                cords: affectedCords    
             })
         } else {
             this.currentPlayer.socket.emit('move', {

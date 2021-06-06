@@ -42,7 +42,8 @@ body {
     justify-content: left;
     align-items: center;
     padding: 0 2em;
-    font-family: 'Consolas', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 1px 1px 10px blue;
 }
 
 .turn {
@@ -53,4 +54,25 @@ body {
     margin: 0 1em;
     font-size: 2em;
     color: rgb(0, 110, 255);
+}
+
+.notifier {
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 30%;
+    z-index: 20;
+    border: 4px outset green;
+    font-size: 3em;
+    color: green;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Consolas', sans-serif;
+    font-weight: bold;
+    display: none;
+    text-shadow: 2px 2px 5px black;
 }

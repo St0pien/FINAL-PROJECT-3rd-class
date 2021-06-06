@@ -1,3 +1,4 @@
+import Notifier from "../UI/Notifier";
 import Connection from "./Connection";
 import Node from "./Node";
 import StartPoint from "./StartPoint";
@@ -16,6 +17,7 @@ export default class Network {
         this.spawnNodes();
 
         this.availableAction = null;
+        this.notifier = new Notifier();
 
         this.io.on('move', ({ type, cords }) => {
             switch (type) {
@@ -31,7 +33,12 @@ export default class Network {
                     break;
 
                 case 'attack':
+                    this.notifier.showGoodNotification('Access Granted!');
                     this.onAttack(cords);
+                    break;
+
+                case 'denied':
+                    this.notifier.showBadNotification('Access Denied!');
                     break;
             }
         });
@@ -47,7 +54,12 @@ export default class Network {
                     break;
 
                 case 'attack':
+                    this.notifier.showBadNotification('Your network has been corrupted')
                     this.onAttack(cords);
+                    break;
+
+                case 'denied':
+                    this.notifier.showGoodNotification('Attack on your network failed!');
                     break;
             }
         });
@@ -91,7 +103,7 @@ export default class Network {
         this.selectedNode = this.nodes[i][j];
         this.selectedNode.select();
 
-        if (this.selectedNode.captured && !this.selectedNode.isOwnedByPlayer && this.findNodesinRange([i, j], 20).length > 0) {
+        if (this.selectedNode.captured && !this.selectedNode.isOwnedByPlayer && this.findNodesinRange([i, j], 3).length > 0) {
             this.availableAction = 'attack';
             this.toolbar.setAction('Attack');
             return;

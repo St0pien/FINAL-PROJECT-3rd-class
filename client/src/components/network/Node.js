@@ -39,7 +39,7 @@ export default class Node extends Group {
 
         this.light = new PointLight(0xffffff, 0, 50, 2);
         this.light.position.set(0, 5, 0);
-        // this.add(this.light);
+        this.add(this.light);
 
         this.label = new LevelSprite(this.scene, this.level, 'blue');
     }
@@ -103,6 +103,8 @@ export default class Node extends Group {
     onAttack() {
         this.captured = false;
         this.isOwnedByPlayer = false;
+        this.level = 1;
+        this.label.updateLevel(this.level);
         this.light.intensity = 0;
     }
 

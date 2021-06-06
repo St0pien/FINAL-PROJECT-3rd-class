@@ -24,11 +24,11 @@ class NetworkNode {
 
     attack() {
         const chance = Math.random();
-        if (true) {
+        if (chance < (0.7 - (this.level-1)/5)) {
             this.destroy();
             return true;
         } else {
-            return; false;
+            return false;
         }
     }
 }
