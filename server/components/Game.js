@@ -61,6 +61,9 @@ class Game {
                     case 'fortify':
                         this.onFortify(p, cords);
                         break;
+                    case 'attack':
+                        this.onAttack(p, cords)
+                        break;
                 }
             });
         });
@@ -119,6 +122,82 @@ class Game {
             type: 'fortify',
             cords
         })
+
+        this.nextPlayer();
+    }
+
+    traverseStep(graph, cords) {
+        const [r, c] = cords;
+        graph[r][c]++;
+        for (let i=-1; i<=1; i++) {
+            for (let j=-1; j<=1; j++) {
+                if (Math.abs(i) == Math.abs(j)) continue;
+                if (r+i < 0) continue;
+                if (r+i >= this.size[0]) continue;
+                if (c+j < 0) continue;
+                if (c+j >= this.size[1]) continue;
+
+                if (graph[r+i][c+j] == 1) {
+                    this.traverseStep(graph, [r+i, c+j]);
+                }
+            }
+        }
+        return graph;
+    }
+
+    traverseNodes(player) {
+        const nodesAttacked = [];
+
+        const graph = this.nodes.map(row => {
+            return row.map(node => node.ownedBy == player.id ? 1 : 0);
+        });
+        this.traverseStep(graph, player.startingPosition);
+        graph.forEach((arr, row) => {
+            arr.forEach((node, col) => {
+                if (node == 1) {
+                    nodesAttacked.push(this.nodes[row][col]);
+                }
+            });
+        });
+
+        return nodesAttacked;
+    }
+
+    onAttack(player, cords) {
+        if (this.currentPlayer.id != player.id) return;
+        const [r, c] = cords;
+        const node = this.nodes[r][c];
+
+        if (node.ownedBy != this.getEnemy(player).id) return;
+
+        if (this.findNodesinRange(player.id, cords, 20).length <= 0) return;
+        // TODO: Check if in range
+
+        const success = node.attack();
+        if (success) {
+            const destroyed = this.traverseNodes(this.getEnemy(player));
+            destroyed.forEach(n => n.destroy());
+
+            const affectedCords = [node.position, ...destroyed.map(({ position }) => position)];
+
+            this.currentPlayer.socket.emit('move', {
+                type: 'attack',
+                cords: affectedCords
+            });
+            this.getEnemy(this.currentPlayer).socket.emit('enemyMove', {
+                type: 'attack',
+                cords: affectedCords
+            })
+        } else {
+            this.currentPlayer.socket.emit('move', {
+                type: 'denied',
+                cords
+            });
+            this.getEnemy(this.currentPlayer).socket.emit('enemyMove', {
+                type: 'denied',
+                cords
+            })
+        }
 
         this.nextPlayer();
     }

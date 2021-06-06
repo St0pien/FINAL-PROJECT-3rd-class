@@ -1,4 +1,4 @@
-import { AnimationMixer, LoopOnce, Group, PointLight, Vector3, MathUtils } from "three";
+import { AnimationMixer, LoopOnce, Group, PointLight, Vector3, MathUtils, Quaternion } from "three";
 import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
 import getModel from "../loaders/Models";
 import LevelSprite from "./LevelSprite";
@@ -58,6 +58,13 @@ export default class Node extends Group {
         })
     }
 
+    attack() {
+        this.io.emit('move', {
+            type: 'attack',
+            cords: this.cords
+        })
+    }
+
     deselect() {
         this.selected = false;
     }
@@ -67,6 +74,7 @@ export default class Node extends Group {
     }
 
     onCapture() {
+        this.action.reset();
         this.action.setLoop(LoopOnce);
         this.action.play();
         this.captured = true;
@@ -77,6 +85,7 @@ export default class Node extends Group {
     }
 
     onEnemyCapture() {
+        this.action.reset();
         this.action.setLoop(LoopOnce);
         this.action.play();
         this.captured = true;
@@ -91,12 +100,20 @@ export default class Node extends Group {
         this.speed = 0.2;
     }
 
+    onAttack() {
+        this.captured = false;
+        this.isOwnedByPlayer = false;
+        this.light.intensity = 0;
+    }
+
     update(timeElapsed) {
         this.mixer.update(timeElapsed);
 
         if (this.captured) {
             this.speed = MathUtils.lerp(this.speed, 0.01, timeElapsed);
             this.rotation.y += this.speed;
+        } else {
+            this.quaternion.slerp(new Quaternion(), timeElapsed*3);
         }
 
         if (this.selected) {

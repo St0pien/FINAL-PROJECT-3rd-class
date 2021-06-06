@@ -26,7 +26,12 @@ export default class Network {
                 case 'fortify':
                     this.nodes[cords[0]][cords[1]].onFortify();
                     this.selectedNode.deselect();
+                    this.availableAction = null;
                     this.toolbar.setAction('');
+                    break;
+
+                case 'attack':
+                    this.onAttack(cords);
                     break;
             }
         });
@@ -39,7 +44,10 @@ export default class Network {
 
                 case 'fortify':
                     this.nodes[cords[0]][cords[1]].onFortify();
-                    
+                    break;
+
+                case 'attack':
+                    this.onAttack(cords);
                     break;
             }
         });
@@ -83,7 +91,7 @@ export default class Network {
         this.selectedNode = this.nodes[i][j];
         this.selectedNode.select();
 
-        if (this.selectedNode.captured && !this.selectedNode.isOwnedByPlayer) {
+        if (this.selectedNode.captured && !this.selectedNode.isOwnedByPlayer && this.findNodesinRange([i, j], 20).length > 0) {
             this.availableAction = 'attack';
             this.toolbar.setAction('Attack');
             return;
@@ -116,7 +124,7 @@ export default class Network {
             z -= 5;
         }
         this.playerStart = new StartPoint(this.scene, [x, z], 0x00ff00);
-        this.connections.push(new Connection(this.scene, this.playerStart.position, startNode.position, 0x00ff00));
+        this.connections.push(new Connection(this.scene, [null, null], cords, this.playerStart.position, startNode.position, 0x00ff00));
         startNode.onCapture();
     }
 
@@ -131,7 +139,7 @@ export default class Network {
             z -= 5;
         }
         this.enemyStart = new StartPoint(this.scene, [x, z], 0xff0000);
-        this.connections.push(new Connection(this.scene, this.enemyStart.position, startNode.position, 0xff0000));
+        this.connections.push(new Connection(this.scene, [null, null], cords, this.enemyStart.position, startNode.position, 0xff0000));
         startNode.onEnemyCapture();
     }
 
@@ -141,7 +149,7 @@ export default class Network {
         z += 20;
         this.target = new StartPoint(this.scene, [x, z], 0x0000ff);
         this.target.light.position.z -= 30;
-        this.connections.push(new Connection(this.scene, this.target.position, endNode.position, 0x0000ff));
+        this.connections.push(new Connection(this.scene, [null, null], cords, this.target.position, endNode.position, 0x0000ff));
     }
 
     onCapture(cords) {
@@ -149,10 +157,11 @@ export default class Network {
         this.nodes[r][c].onCapture();
         const parents = this.findNodesinRange(cords, 1);
         parents.forEach(parent => {
-            this.connections.push(new Connection(this.scene, parent.position, this.nodes[r][c].position, 0x00ff00));
+            this.connections.push(new Connection(this.scene, parent.cords, cords, parent.position, this.nodes[r][c].position, 0x00ff00));
         })
 
         setTimeout(() => {
+            this.availableAction = null;
             this.toolbar.setAction('');
             this.selectedNode.deselect();
         }, 500)
@@ -163,8 +172,35 @@ export default class Network {
         this.nodes[r][c].onEnemyCapture();
         const parents = this.findNodesinRange(cords, 1, false);
         parents.forEach(parent => {
-            this.connections.push(new Connection(this.scene, parent.position, this.nodes[r][c].position, 0xff0000));
+            this.connections.push(new Connection(this.scene, parent.cords, cords, parent.position, this.nodes[r][c].position, 0xff0000));
         })
+    }
+
+    onAttack(listOfCords) {
+        listOfCords.forEach(cords => {
+            const [r, c] = cords;
+            this.nodes[r][c].onAttack();
+
+            // Handle connections
+            this.connections.forEach(conn => {
+                console.log([r, c], conn.startCords)
+                if (conn.startCords[0] == r && conn.startCords[1] == c) {
+                    conn.remove();
+                }
+
+                if (conn.endCords[0] == r && conn.endCords[1] == c) {
+                    conn.remove();
+                }
+            })
+            this.connections = this.connections.filter(conn => {
+                return conn.startCords[0] != r || conn.startCords[1] != c && conn.endCords[0] != r || conn.endCords[1] != c;
+            });
+
+        })
+
+        this.availableAction = null;
+        this.toolbar.setAction('');
+        this.selectedNode.deselect();
     }
 
     update(timeElapsed) {
@@ -180,6 +216,8 @@ export default class Network {
                 case 'fortify':
                     this.selectedNode.fortify();
                     break;
+                case 'attack':
+                    this.selectedNode.attack();
             }
 
             this.input.keys.action = false;

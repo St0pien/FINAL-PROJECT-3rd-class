@@ -16,6 +16,21 @@ class NetworkNode {
     fortify() {
         this.level++;
     }
+
+    destroy() {
+        this.ownedBy = null;
+        this.level = 1;
+    }
+
+    attack() {
+        const chance = Math.random();
+        if (true) {
+            this.destroy();
+            return true;
+        } else {
+            return; false;
+        }
+    }
 }
 
 module.exports = NetworkNode;
