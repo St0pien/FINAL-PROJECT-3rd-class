@@ -9,16 +9,16 @@ export default class Notifier {
 
     showGoodNotification(text) {
         this.ref.innerHTML = text;
-        this.ref.style.borderColor = 'green'
-        this.ref.style.color = 'green';
+        this.ref.style.animationName = 'flash-good'
+        this.ref.style.borderColor = 'var(--green)'
         this.ref.style.display = 'flex';
         this.hide();
     }
 
     showBadNotification(text) {
         this.ref.innerHTML = text;
-        this.ref.style.borderColor = 'red'
-        this.ref.style.color = 'red';
+        this.ref.style.borderColor = 'var(--red)'
+        this.ref.style.animationName = 'flash-bad'
         this.ref.style.display = 'flex';
         this.hide();
     }

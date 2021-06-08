@@ -22,8 +22,6 @@ export default class Connection {
     remove() {
         this.scene.remove(this.zeros.bits);
         this.scene.remove(this.ones.bits);
-        console.log('removed connection', this.startCords);
-        
     }
 
     update() {

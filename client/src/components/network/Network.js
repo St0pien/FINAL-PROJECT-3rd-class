@@ -195,7 +195,6 @@ export default class Network {
 
             // Handle connections
             this.connections.forEach(conn => {
-                console.log([r, c], conn.startCords)
                 if (conn.startCords[0] == r && conn.startCords[1] == c) {
                     conn.remove();
                 }

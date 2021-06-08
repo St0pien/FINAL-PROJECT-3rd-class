@@ -16,6 +16,10 @@ const { games } = require('./data');
 const PORT = process.env.PORT || 3000;
 
 io.on('connection', socket => {
+    const filteredGames = games.filter(g => !g.finished);
+    games.splice(0);
+    games.push(...filteredGames);
+
     let game = games.find(g => g.isFree());
     if (!game) {
         game = new Game(io);

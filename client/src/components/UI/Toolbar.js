@@ -21,11 +21,11 @@ export default class Toolbar {
     showTurn(isMyTurn) {
         if (isMyTurn) {
             this.turnIndicator.innerHTML = 'Your turn';
-            this.turnIndicator.style.color = 'green';
+            this.turnIndicator.style.color = 'var(--green)';
             this.turnIndicator.style.textShadow = '1px 1px 10px green';
         } else {
             this.turnIndicator.innerHTML = 'Enemy turn';
-            this.turnIndicator.style.color = 'red';
+            this.turnIndicator.style.color = 'var(--red)';
             this.turnIndicator.style.textShadow = '1px 1px 10px red';
         }
     }

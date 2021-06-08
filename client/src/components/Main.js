@@ -7,6 +7,11 @@ import Input from './Input';
 import { loadModels } from './loaders/Models';
 import Menu from './UI/Menu';
 import Toolbar from './UI/Toolbar';
+import EndScreen from './UI/EndScreen';
+
+import greenCodeVideo from "../assets/vidoes/greencode.mp4";
+import redCodeVideo from "../assets/vidoes/redcode.mp4";
+import blueCodeVideo from "../assets/vidoes/bluecode.mp4";
 
 export default class Main {
     constructor(container) {
@@ -40,6 +45,31 @@ export default class Main {
                 this.menu.hide();
             }
             this.init();
+        });
+
+        this.io.on('win', () => {
+            setTimeout(() => {
+                this.end = true;
+                this.toolbar.ref.remove();
+                this.renderer.domElement.remove();
+                new EndScreen("You owned the system", greenCodeVideo, 'var(--green');
+            }, 200);
+        });
+
+        this.io.on('lost', () => {
+            setTimeout(() => {
+                this.end = true;
+                this.toolbar.ref.remove();
+                this.renderer.domElement.remove();
+                new EndScreen("You lost match!", redCodeVideo, 'var(--red)');
+            }, 200);
+        });
+
+        this.io.on('abort', () => {
+            if (this.end) return;
+            this.toolbar.ref.remove();
+            this.renderer.domElement.remove();
+            new EndScreen("Your rival is afraid of you! He left the match!", blueCodeVideo, 'var(--blue)');
         })
 
         this.menu.wait();
@@ -60,7 +90,7 @@ export default class Main {
         const delta = this.clock.getDelta();
         this.camera.update();
         if (this.network) {
-            this.network.update(delta);
+            this.network.update(delta); 
         }
 
         requestAnimationFrame(() => this.render());

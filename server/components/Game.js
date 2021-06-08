@@ -8,6 +8,7 @@ class Game {
         this.players = [];
         this.nodes = [];
         this.size = [10, 9];
+        this.finished = false;
 
         for (let i = 0; i < this.size[0]; i++) {
             this.nodes[i] = [];
@@ -66,6 +67,11 @@ class Game {
                         break;
                 }
             });
+
+            p.socket.on('disconnect', () => {
+                this.getEnemy(p).socket.emit('abort');
+                this.finished = true;
+            });
         });
         this.nextPlayer();
     }
@@ -92,6 +98,12 @@ class Game {
         if (this.findNodesinRange(player.id, cords,  1).length == 0) return;
 
         node.capture(this.currentPlayer.id);
+
+        const [row, col] = this.target;
+
+        if (row == r && col == c) {
+           this.onWin();
+        }
 
         this.currentPlayer.socket.emit('move', {
             type: 'capture',
@@ -199,6 +211,13 @@ class Game {
         }
 
         this.nextPlayer();
+    }
+
+    onWin() {
+        this.currentPlayer.socket.emit('win');
+        this.getEnemy(this.currentPlayer).socket.emit('lost');
+
+        this.finished  = true;
     }
 
     nextPlayer() {
