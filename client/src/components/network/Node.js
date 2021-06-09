@@ -106,6 +106,8 @@ export default class Node extends Group {
         this.level = 1;
         this.label.updateLevel(this.level);
         this.light.intensity = 0;
+        this.attacked = true;
+        setTimeout(() => this.attacked = false, 1000);
     }
 
     update(timeElapsed) {
@@ -118,7 +120,9 @@ export default class Node extends Group {
             this.quaternion.slerp(new Quaternion(), timeElapsed*3);
         }
 
-        if (this.selected) {
+        if (this.attacked) {
+            this.mesh.position.lerp(new Vector3(0, -150, 0), timeElapsed*5);
+        } else if (this.selected) {
             this.mesh.position.lerp(new Vector3(0, 150, 0), timeElapsed*3);
         } else {
             this.mesh.position.lerp(new Vector3(0, 0, 0), timeElapsed*3);

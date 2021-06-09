@@ -1,8 +1,9 @@
 import { Mesh, SphereGeometry, Group, PointLight, MeshBasicMaterial } from "three"
 
 export default class StartPoint extends Group {
-    constructor(scene, pos, color) {
+    constructor(scene, cords, pos, color) {
         super();
+        this.cords = cords;
         this.geometry = new SphereGeometry(2, 20, 20);
         this.material = new MeshBasicMaterial({ color: color });
         this.mesh = new Mesh(this.geometry, this.material);

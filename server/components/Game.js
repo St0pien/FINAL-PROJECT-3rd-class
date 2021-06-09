@@ -122,6 +122,7 @@ class Game {
         const [r, c] = cords;
         const node = this.nodes[r][c];
 
+        if (player.startingPosition[0] == r && player.startingPosition[1] == c) return;
         if (node.ownedBy != player.id) return;
 
         node.fortify();
@@ -181,6 +182,9 @@ class Game {
         const node = this.nodes[r][c];
 
         if (node.ownedBy != this.getEnemy(player).id) return;
+
+        const enemyStart = this.getEnemy(player).startingPosition;
+        if (enemyStart[0] == r && enemyStart[1] == c) return;
 
         if (this.findNodesinRange(player.id, cords, 3).length <= 0) return;
 

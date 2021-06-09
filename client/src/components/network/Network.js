@@ -103,19 +103,28 @@ export default class Network {
         this.selectedNode = this.nodes[i][j];
         this.selectedNode.select();
 
-        if (this.selectedNode.captured && !this.selectedNode.isOwnedByPlayer && this.findNodesinRange([i, j], 3).length > 0) {
+        let canBeAttacked = this.selectedNode.captured;
+        canBeAttacked = canBeAttacked && !this.selectedNode.isOwnedByPlayer;
+        canBeAttacked = canBeAttacked && this.findNodesinRange([i, j], 3).length > 0;
+        let [x, y] = this.enemyStart.cords;
+        canBeAttacked = canBeAttacked && (i != x || j != y);
+
+
+        if (canBeAttacked) {
             this.availableAction = 'attack';
             this.toolbar.setAction('Attack');
             return;
         }
 
-        if (this.selectedNode.isOwnedByPlayer) {
+        [x, y] = this.playerStart.cords;
+        const notStart = i != x || j != y;
+        if (this.selectedNode.isOwnedByPlayer && notStart) {
             this.availableAction = 'fortify';
             this.toolbar.setAction('Fortify');
             return;
         }
 
-        if (this.findNodesinRange([i, j], 1).length > 0) {
+        if (this.findNodesinRange([i, j], 1).length > 0 && notStart) {
             this.availableAction = 'capture';
             this.toolbar.setAction('Capture');
             return;
@@ -135,7 +144,7 @@ export default class Network {
             x += 10;
             z -= 5;
         }
-        this.playerStart = new StartPoint(this.scene, [x, z], 0x00ff00);
+        this.playerStart = new StartPoint(this.scene, cords, [x, z], 0x00ff00);
         this.connections.push(new Connection(this.scene, [null, null], cords, this.playerStart.position, startNode.position, 0x00ff00));
         startNode.onCapture();
     }
@@ -150,7 +159,7 @@ export default class Network {
             x += 10;
             z -= 5;
         }
-        this.enemyStart = new StartPoint(this.scene, [x, z], 0xff0000);
+        this.enemyStart = new StartPoint(this.scene, cords, [x, z], 0xff0000);
         this.connections.push(new Connection(this.scene, [null, null], cords, this.enemyStart.position, startNode.position, 0xff0000));
         startNode.onEnemyCapture();
     }
@@ -159,7 +168,7 @@ export default class Network {
         const endNode = this.nodes[cords[0]][cords[1]]
         let { x, z } = endNode.position;
         z += 20;
-        this.target = new StartPoint(this.scene, [x, z], 0x0000ff);
+        this.target = new StartPoint(this.scene, cords, [x, z], 0x0000ff);
         this.target.light.position.z -= 30;
         this.connections.push(new Connection(this.scene, [null, null], cords, this.target.position, endNode.position, 0x0000ff));
     }
