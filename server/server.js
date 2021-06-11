@@ -1,5 +1,10 @@
+const path = require('path');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
+const loginSystem = require('./routers/loginSystem');
+const DB = require('./utils/DB');
+const authorize = require('./utils/authorize');
 const Game = require('./components/Game');
 const Player = require('./components/Player');
 
@@ -11,7 +16,7 @@ const io = require('socket.io')(server, {
     }
 });
 
-const { games } = require('./data');
+const { games } = require('./utils/data');
 
 const PORT = process.env.PORT || 3000;
 
@@ -28,4 +33,20 @@ io.on('connection', socket => {
     game.addPlayer(new Player(socket));
 });
 
-server.listen(PORT, () => console.log(`server listening on ${PORT}`));
+app.use(express.static(path.join(__dirname, 'static')));
+app.use('/', loginSystem);
+
+app.get('/', cookieParser(),  authorize, (req, res) => {
+    if (!req.user) {
+        res.redirect('/login');
+        return;
+    }
+
+    res.send("WELCOME INSIDE " + req.user);
+});
+
+(async () => {
+    console.log("Connecting to DB...");
+    await DB.init();
+    server.listen(PORT, () => console.log(`server listening on ${PORT}`));
+})();

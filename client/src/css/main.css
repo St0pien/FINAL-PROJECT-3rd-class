@@ -45,7 +45,7 @@ body {
     left: 0;
     z-index: 10;
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
     align-items: center;
     padding: 0 2em;
     font-family: 'Montserrat', sans-serif;
@@ -180,4 +180,22 @@ body {
     min-width: 100%;
     min-height: 100vh;
     z-index: 1;
+}
+
+.nicks {
+    font-size: 2em;
+}
+
+.player-nick {
+    color: var(--green);
+    text-shadow: 1px 1px 5px var(--green);
+}
+
+.enemy-nick {
+    color: var(--red);
+    text-shadow: 1px 1px 5px var(--red);
+}
+
+.vs {
+    color: var(--blue);
 }

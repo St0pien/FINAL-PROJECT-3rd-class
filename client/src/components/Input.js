@@ -23,6 +23,10 @@ export default class Input {
             this.scroll += e.deltaY;
         });
 
+        window.addEventListener('DOMMouseScroll', e => {
+            this.scroll += e.detail*100;
+        });
+
         window.addEventListener('mousedown', e => this.onMouseDown(e))
     }
 

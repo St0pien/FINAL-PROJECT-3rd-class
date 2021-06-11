@@ -5,6 +5,13 @@ class Player {
         this.socket = socket;
         this.id = uuid();
         this.startingPosition = null;
+        this.nick = 'Anonymouse';
+    }
+
+    setNick(nick) {
+        if (nick) {
+            this.nick = nick;
+        }
     }
 }
 

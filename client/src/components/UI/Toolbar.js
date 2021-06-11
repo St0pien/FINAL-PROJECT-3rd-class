@@ -16,6 +16,24 @@ export default class Toolbar {
         this.actionIndicator = document.createElement('div');
         this.actionIndicator.classList.add('action');
         this.ref.appendChild(this.actionIndicator);
+
+        this.nicks = document.createElement('div');
+        this.nicks.classList.add('nicks');
+
+        this.player = document.createElement('span');
+        this.player.classList.add('player-nick');
+        this.nicks.appendChild(this.player);
+
+        const vs = document.createElement('span');
+        vs.classList.add('vs');
+        vs.innerHTML = " VS ";
+        this.nicks.appendChild(vs);
+
+        this.enemy = document.createElement('span');
+        this.enemy.classList.add('enemy-nick');
+        this.nicks.appendChild(this.enemy);
+
+        this.ref.appendChild(this.nicks);
     }
 
     showTurn(isMyTurn) {
@@ -32,5 +50,10 @@ export default class Toolbar {
 
     setAction(action) {
         this.actionIndicator.innerHTML = action
+    }
+
+    setNicks(player, enemy) {
+        this.player.innerHTML = player;
+        this.enemy.innerHTML = enemy;
     }
 }

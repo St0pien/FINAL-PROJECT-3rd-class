@@ -1,5 +1,8 @@
 const { v4: uuid } = require('uuid');
+const jwt = require('jsonwebtoken');
+const { SECRET } = require('../utils/data');
 const NetworkNode = require('./NetworkNode');
+const DB = require('../utils/DB');
 
 class Game {
     constructor(io) {
@@ -34,22 +37,32 @@ class Game {
         player.startingPosition = [0, (this.size[1] - 1) * this.players.length];
 
         player.socket.join(this.id);
+
+        player.socket.on('identity', token => {
+            try {
+                const nick = jwt.verify(token, SECRET);
+                player.setNick(nick);
+
+                if (!this.isFree()) {
+                    this.start();
+                }
+            } catch {}
+        });
+
         player.socket.emit('config', {
             startingPosition: player.startingPosition,
             board: this.size,
             target: this.target
         });
         this.players.push(player);
-
-        if (!this.isFree()) {
-            this.start();
-        }
     }
 
     start() {
         this.players.forEach(p => {
             p.socket.emit('start', {
-                enemyPosition: this.getEnemy(p).startingPosition
+                enemyPosition: this.getEnemy(p).startingPosition,
+                nick: p.nick,
+                enemyNick: this.getEnemy(p).nick
             });
 
             this.nodes[p.startingPosition[0]][p.startingPosition[1]].capture(p.id);
@@ -220,6 +233,13 @@ class Game {
     onWin() {
         this.currentPlayer.socket.emit('win');
         this.getEnemy(this.currentPlayer).socket.emit('lost');
+
+        const player = this.currentPlayer.nick
+        const enemy = this.getEnemy(this.currentPlayer).nick
+        if (player != enemy) {
+            DB.addWin(player);
+            DB.addDefeat(enemy);
+        }
 
         this.finished  = true;
     }

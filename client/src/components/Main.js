@@ -8,10 +8,12 @@ import { loadModels } from './loaders/Models';
 import Menu from './UI/Menu';
 import Toolbar from './UI/Toolbar';
 import EndScreen from './UI/EndScreen';
+import cookies from './utils/cookies';
 
 import greenCodeVideo from "../assets/vidoes/greencode.mp4";
 import redCodeVideo from "../assets/vidoes/redcode.mp4";
 import blueCodeVideo from "../assets/vidoes/bluecode.mp4";
+
 
 export default class Main {
     constructor(container) {
@@ -36,10 +38,15 @@ export default class Main {
             this.boardSize = board;
             this.startingPosition = startingPosition;
             this.target = target;
+
+            this.io.emit('identity', cookies().token);
         });
 
-        this.io.on('start', ({ enemyPosition }) => {
+        this.io.on('start', ({ enemyPosition, nick, enemyNick }) => {
             this.enemyPosition = enemyPosition;
+
+            this.toolbar.setNicks(nick, enemyNick);
+
             this.menu.load();
             DefaultLoadingManager.onLoad = () => {
                 this.menu.hide();
@@ -88,7 +95,7 @@ export default class Main {
         this.renderer.render(this.scene, this.camera);
 
         const delta = this.clock.getDelta();
-        this.camera.update();
+        this.camera.update(delta);
         if (this.network) {
             this.network.update(delta); 
         }

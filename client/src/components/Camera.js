@@ -27,21 +27,21 @@ export default class Camera extends PerspectiveCamera {
         this.updateProjectionMatrix();
     }
 
-    update() {
+    update(timeElapsed) {
         if (this.input.keys.forward) {
-            this.position.z += 0.5;
+            this.position.z += 0.5 * timeElapsed*100;
         }
 
         if (this.input.keys.backward) {
-            this.position.z -= 0.5;
+            this.position.z -= 0.5 * timeElapsed*100;
         }
 
         if (this.input.keys.left) {
-            this.position.x += 0.5;
+            this.position.x += 0.5 * timeElapsed*100;
         }
 
         if (this.input.keys.right) {
-            this.position.x -= 0.5;
+            this.position.x -= 0.5 * timeElapsed*100;
         }
 
         this.position.y += this.input.scroll / 50;
