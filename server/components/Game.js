@@ -42,11 +42,11 @@ class Game {
             try {
                 const nick = jwt.verify(token, SECRET);
                 player.setNick(nick);
-
-                if (!this.isFree()) {
-                    this.start();
-                }
             } catch {}
+
+            if (!this.isFree()) {
+                this.start();
+            }
         });
 
         player.socket.emit('config', {
