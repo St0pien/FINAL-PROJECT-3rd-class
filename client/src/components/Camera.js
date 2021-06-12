@@ -8,7 +8,8 @@ export default class Camera extends PerspectiveCamera {
 
         super(75, width / height, 0.1, 10000);
         this.scene = scene
-        this.position.set(0, 80, -80);
+        this.cameraStart = new Vector3(0, 110, -120);
+        this.position.copy(this.cameraStart);
         this.lookAt(new Vector3(0, 0, 0));
 
         this.input = input;
@@ -29,22 +30,23 @@ export default class Camera extends PerspectiveCamera {
 
     update(timeElapsed) {
         if (this.input.keys.forward) {
-            this.position.z += 0.5 * timeElapsed*100;
+            this.position.z += 0.5 * timeElapsed*200;
         }
 
         if (this.input.keys.backward) {
-            this.position.z -= 0.5 * timeElapsed*100;
+            this.position.z -= 0.5 * timeElapsed*200;
         }
 
         if (this.input.keys.left) {
-            this.position.x += 0.5 * timeElapsed*100;
+            this.position.x += 0.5 * timeElapsed*200;
         }
 
         if (this.input.keys.right) {
-            this.position.x -= 0.5 * timeElapsed*100;
+            this.position.x -= 0.5 * timeElapsed*200;
         }
 
         this.position.y += this.input.scroll / 50;
+        this.position.clamp(new Vector3(-200, 15, -200), new Vector3(200, 300, 50));
         this.input.scroll = 0;
 
         if (this.input.mouse.left) {

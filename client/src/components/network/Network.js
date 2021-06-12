@@ -74,8 +74,8 @@ export default class Network {
                 node.onClick = () => {
                     this.selectNode(i, j);
                 }
-                const z = i * (this.nodeSize + this.space) - width * (this.nodeSize + this.space) / 2;
-                const x = j * (this.nodeSize + this.space) - height * (this.nodeSize + this.space) / 2;
+                const z = i * (this.nodeSize + this.space) - (width - 1.5) * (this.nodeSize + this.space) / 2;
+                const x = j * (this.nodeSize + this.space) - (height - 1.5) * (this.nodeSize + this.space) / 2;
                 node.position.set(x, 0, z);
                 node.label.sprite.position.set(x - 3, -1, z - 2);
 
