@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const app = express();
 const loginSystem = require('./routers/loginSystem');
 const DB = require('./utils/DB');
@@ -33,7 +34,11 @@ io.on('connection', socket => {
     game.addPlayer(new Player(socket));
 });
 
-app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, 'static')));    
+app.use(cors({
+    origin: "http://localhost:8080",
+    credentials: true
+}));
 app.use('/', loginSystem);
 
 app.get('/', cookieParser(),  authorize, (req, res) => {
@@ -42,7 +47,22 @@ app.get('/', cookieParser(),  authorize, (req, res) => {
         return;
     }
 
-    res.send("WELCOME INSIDE " + req.user);
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
+
+app.get('/stats', cookieParser(), authorize, async (req, res) => {
+    if (!req.user) {
+        res.send(JSON.stringify({
+            user: 'Anonymouse',
+            wins: 0,
+            defeats: 0
+        }));
+        return;
+    }
+
+    const stats = await DB.getUserStats(req.user);
+    res.type('application/json');
+    res.send(JSON.stringify(stats));
 });
 
 (async () => {

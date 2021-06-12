@@ -138,11 +138,11 @@ export default class Network {
         const startNode = this.nodes[cords[0]][cords[1]];
         let { x, z } = startNode.position
         if (x < 0) {
-            x -= 10;
-            z -= 5;
+            x -= 15;
+            z -= 10;
         } else {
-            x += 10;
-            z -= 5;
+            x += 15;
+            z -= 10;
         }
         this.playerStart = new StartPoint(this.scene, cords, [x, z], 0x00ff00);
         this.connections.push(new Connection(this.scene, [null, null], cords, this.playerStart.position, startNode.position, 0x00ff00));
@@ -153,11 +153,11 @@ export default class Network {
         const startNode = this.nodes[cords[0]][cords[1]];
         let { x, z } = startNode.position;
         if (x < 0) {
-            x -= 10;
-            z -= 5;
+            x -= 15;
+            z -= 10;
         } else {
-            x += 10;
-            z -= 5;
+            x += 15;
+            z -= 10;
         }
         this.enemyStart = new StartPoint(this.scene, cords, [x, z], 0xff0000);
         this.connections.push(new Connection(this.scene, [null, null], cords, this.enemyStart.position, startNode.position, 0xff0000));
@@ -167,7 +167,7 @@ export default class Network {
     placeTarget(cords) {
         const endNode = this.nodes[cords[0]][cords[1]]
         let { x, z } = endNode.position;
-        z += 20;
+        z += 30;
         this.target = new StartPoint(this.scene, cords, [x, z], 0x0000ff);
         this.target.light.position.z -= 30;
         this.connections.push(new Connection(this.scene, [null, null], cords, this.target.position, endNode.position, 0x0000ff));
@@ -250,5 +250,9 @@ export default class Network {
         this.connections.forEach(c => {
             c.update();
         })
+
+        this.playerStart.update();
+        this.enemyStart.update();
+        this.target.update();
     }
 }

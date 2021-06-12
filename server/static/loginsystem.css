@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
+:root {
+    --green: rgb(1, 194, 1);
+    --red: rgb(255, 51, 0);
+    --blue: rgb(0, 110, 255);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    text-align: center;
+    transition: filter .3s ease-in-out;
+    font-size: 1.6em;
+}
+
+a:hover {
+    filter: blur(5px);
+}
+
+.link {
+    font-family: 'Consolas', sans-serif;
+    color: var(--blue);
+    font-size: 1.5em;
+}
+
+.logo {
+    font-family: 'Montserrat', sans-serif;
+    width: 100%;
+    text-align: center;
+    font-size: 5em;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+}
+
+.red {
+    color: var(--red);
+    text-shadow: 3px 3px 5px var(--red);
+}
+
+.green {
+    color: var(--green) !important;
+    text-shadow: 3px 3px 5px var(--green);
+}
+
+.blue {
+    color: var(--blue);
+    text-shadow: 3px 3px 5px var(--blue);
+}
+
+.form {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#message {
+    font-family: 'Montserrat';
+    font-size: 1.5em;
+    color: var(--red);
+}
+
+.input {
+    font-family: 'Consolas', sans-serif;
+    background: black;
+    font-size: 2em;
+    border: 2px solid white;
+    border-radius: 100px;
+    padding: .2em .5em;
+    outline: none;
+    color: white;
+    text-align: center;
+    width: 40%;
+    transition: width .5s ease-in-out;
+}
+
+.input:focus {
+    width: 50%;
+}
+
+.input:nth-child(odd) {
+    border-color: var(--blue);
+    color: var(--blue);
+}
+
+.input:nth-child(odd):focus {
+    box-shadow: 0px 0px 10px 5px var(--blue);
+}
+
+.input:nth-child(even) {
+    border-color: var(--green);
+    color: var(--green);
+}
+
+.input:nth-child(even):focus {
+    box-shadow: 0px 0px 10px 5px var(--green);
+}
+
+@import url(https://fonts.googleapis.com/css?family=Rajdhani:300);
+
+.button{
+  cursor: pointer;
+  position: relative;
+  width: 240px;
+  background: rgba(0, 190, 190, 0.2);
+  border: 1px solid var(--blue);
+  margin: 20px;
+  padding: 5px 27px;
+  color: var(--blue);
+  font-weight: 500;
+  transition: .3s;
+  text-transform: uppercase;
+  font-size: 24px;
+  overflow: hidden;
+  outline: none;
+  font-family: 'Rajdhani', sans-serif;
+  border-radius: 15px;
+}
+
+.button:before, .button:after{
+  content: "";
+  position: absolute;
+  height: 25px;
+  width: 20px;
+  background: var(--blue);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: -1;
+}
+.button:before{
+  left: -20px;
+}
+.button:after{
+  right: -20px;
+}
+.button:hover{
+    box-shadow: 0 0 25px var(--blue), 0 1px 5px #212121;
+    border-color: var(--blue);
+    background:  rgba(0, 190, 190, 0.2);
+    color: rgba(33, 33, 33, 0.7);
+}
+.button:hover:before{
+  animation: leftbox 1s forwards;
+}
+.button:hover:after{
+  animation: rightbox 1s forwards;
+}
+@keyframes leftbox {
+  0%{
+    left: -22px;
+  }
+  50%{
+    height: 30px;
+    width: 30px;
+  }
+  100%{
+    height: 200%;
+    width: 150%;
+  }
+}
+@keyframes rightbox {
+  0%{
+    right: -22px;
+  }
+  50%{
+    height: 30px;
+    width: 30px;
+  }
+  100%{
+    height: 200%;
+    width: 150%;
+  }
+}

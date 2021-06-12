@@ -54,6 +54,15 @@ class Game {
             board: this.size,
             target: this.target
         });
+
+        player.socket.on('disconnect', () => {
+            const enemy = this.getEnemy(player);
+            if (enemy) {
+                enemy.socket.emit('abort');
+            }
+            this.finished = true;
+        });
+
         this.players.push(player);
     }
 
@@ -79,11 +88,6 @@ class Game {
                         this.onAttack(p, cords)
                         break;
                 }
-            });
-
-            p.socket.on('disconnect', () => {
-                this.getEnemy(p).socket.emit('abort');
-                this.finished = true;
             });
         });
         this.nextPlayer();

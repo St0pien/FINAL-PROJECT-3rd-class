@@ -1,9 +1,12 @@
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { EnvironmentPlugin } = require('webpack');
 
 module.exports = {
     entry: './src/main.js',
     output: {
+        publicPath: "/game/",
+        path: path.join(__dirname, '..', 'server', 'static', 'game'),
         filename: 'bundle.js'
     },
     mode: 'development',
@@ -11,7 +14,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             hash: true,
-            filename: './index.html',
+            filename: '../../views/index.html',
             template: './src/public/index.html',
             minify: true,
             inject: 'head'

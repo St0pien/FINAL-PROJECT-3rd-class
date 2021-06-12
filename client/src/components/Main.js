@@ -22,7 +22,7 @@ export default class Main {
         this.renderer = new Renderer(this.scene, container);
         this.input = new Input();
         this.camera = new Camera(this.renderer, this.scene, this.input);
-        this.light = new AmbientLight(0xffffff, 0.2);
+        this.light = new AmbientLight(0xffffff, 0.4);
         this.scene.add(this.light);
         this.clock = new Clock();
 

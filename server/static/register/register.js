@@ -25,6 +25,7 @@ function send() {
         } else {
             link.style.display = "block";
             message.innerHTML = "Now you can login";
+            message.classList.add('green');
         }
     });
 }

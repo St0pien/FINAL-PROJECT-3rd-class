@@ -5,17 +5,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Register | Dexter</title>
+
+    <link rel="stylesheet" href="../loginsystem.css">
 </head>
 
 <body>
-    <h1>Register yourself</h1>
-    <div id="message"></div>
-    <input id="login" type="text" placeholder="login">
-    <input id="password" type="password" placeholder="password">
-    <input id="confirm" type="password" placeholder="confirm password">
-    <input id="btn" type="button" value="Register">
-    <a href="/login" style="display: none;">Login</a>
+    <h1 class="logo"><span class="red">De</span><span class="green">xt</span><span class="blue">er</span></h1>
+
+    <div class="form">
+        <div id="message"></div>
+        <input class="input" id="login" type="text" placeholder="login">
+        <input class="input" id="password" type="password" placeholder="password">
+        <input class="input" id="confirm" type="password" placeholder="confirm password">
+        <button class="button" id="btn">Register</button>
+        <a class="button" href="/login" style="display: none;">Login</a>
+    </div>
 
     <script src="register.js"></script>
 </body>

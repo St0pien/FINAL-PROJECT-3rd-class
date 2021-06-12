@@ -57,6 +57,17 @@ class DB {
         const collection = db.collection('users');
         collection.update({ login: user }, { $inc: { defeats: 1 } });
     }
+
+    static getUserStats(user) {
+        return new Promise(resolve => {
+            const collection = db.collection('users');
+            collection.findOne({ login: user }, (err, result) => {
+                if (!result) return resolve({});
+                const { wins, defeats } = result;
+                resolve({ user, wins, defeats });
+            });
+        })
+    }
 }
 
 module.exports = DB;
