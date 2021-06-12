@@ -40,8 +40,9 @@ export default class Menu {
             this.nick.innerHTML = user;
             this.wins.innerHTML = `${wins} wins`;
             this.defeats.innerHTML = `${defeats} defeats`;
-            const ratio = wins && defeats ? wins/(wins+defeats) : 0;
-            this.ratio.innerHTML = `${ratio.toFixed(2)} win rate`;
+            let ratio = wins / (wins+defeats) * 100;
+            if (!ratio) ratio = 0;
+            this.ratio.innerHTML = `${ratio.toFixed(2)}% win rate`;
         });
 
         this.stats.appendChild(this.wins);
