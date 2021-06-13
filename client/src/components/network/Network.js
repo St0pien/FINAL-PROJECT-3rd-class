@@ -179,7 +179,7 @@ export default class Network {
         const parents = this.findNodesinRange(cords, 1);
         parents.forEach(parent => {
             this.connections.push(new Connection(this.scene, parent.cords, cords, parent.position, this.nodes[r][c].position, 0x00ff00));
-        })
+        });
 
         setTimeout(() => {
             this.availableAction = null;
@@ -225,9 +225,6 @@ export default class Network {
 
     update(timeElapsed) {
         if (this.input.keys.action && this.selectedNode) {
-            if (this.findNodesinRange(this.selectedNode.cords, 1).length > 0) {
-                this.selectedNode.capture();
-            }
             switch (this.availableAction) {
                 case 'capture':
                     this.selectedNode.capture();
