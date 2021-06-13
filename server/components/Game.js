@@ -5,9 +5,8 @@ const NetworkNode = require('./NetworkNode');
 const DB = require('../utils/DB');
 
 class Game {
-    constructor(io) {
+    constructor() {
         this.id = uuid();
-        this.io = io;
         this.players = [];
         this.nodes = [];
         this.size = [10, 9];

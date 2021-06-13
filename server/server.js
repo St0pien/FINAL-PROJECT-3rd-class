@@ -21,6 +21,7 @@ const { games } = require('./utils/data');
 
 const PORT = process.env.PORT || 3000;
 
+
 io.on('connection', socket => {
     const filteredGames = games.filter(g => !g.finished);
     games.splice(0);
@@ -28,13 +29,13 @@ io.on('connection', socket => {
 
     let game = games.find(g => g.isFree());
     if (!game) {
-        game = new Game(io);
+        game = new Game();
         games.push(game);
     }
     game.addPlayer(new Player(socket));
 });
 
-app.use(express.static(path.join(__dirname, 'static')));    
+app.use(express.static(path.join(__dirname, 'static')));
 app.use(cors({
     origin: "http://localhost:8080",
     credentials: true
