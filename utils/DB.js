@@ -23,7 +23,7 @@ class DB {
             const collection = db.collection('users');
             collection.find({ login: user.login }).toArray((err, result) => {
                 if (result.length > 0) {
-                    resolve(false);
+                    return resolve(false);
                 }
 
                 collection.insertOne(user, (err) => {
