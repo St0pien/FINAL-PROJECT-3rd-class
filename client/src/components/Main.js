@@ -97,7 +97,7 @@ export default class Main {
         const delta = this.clock.getDelta();
         this.camera.update(delta);
         if (this.network) {
-            this.network.update(delta); 
+            this.network.update(delta);
         }
 
         requestAnimationFrame(() => this.render());
