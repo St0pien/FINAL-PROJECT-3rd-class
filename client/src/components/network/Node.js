@@ -21,16 +21,21 @@ export default class Node extends Group {
         this.onClick = () => null;
     }
 
+    colorize(color) {
+        this.mesh.children.forEach(c => {
+            if (c.material) {
+                c.material = c.material.clone();
+                c.material.opacity = 0.2;
+                c.material.color.setHex(color);
+            }
+        });
+    }
+
     loadModel() {
         const base = getModel('node');
         this.mesh = SkeletonUtils.clone(base);
         this.mesh.animations = base.animations.map(a => a.clone());
-        this.mesh.children.forEach(c => {
-            if (c.material) {
-                c.material.opacity = 0.2;
-                c.material.color.setHex(0x444444);
-            }
-        })
+        this.colorize(0x444444);
         this.scale.setScalar(0.05);
         this.add(this.mesh);
 
@@ -39,7 +44,6 @@ export default class Node extends Group {
 
         this.light = new PointLight(0xffffff, 0, 50, 2);
         this.light.position.set(0, 5, 0);
-        this.add(this.light);
 
         this.label = new LevelSprite(this.scene, this.level, 'blue');
     }
@@ -80,8 +84,7 @@ export default class Node extends Group {
         this.captured = true;
         this.isOwnedByPlayer = true;
 
-        this.light.intensity = 2;
-        this.light.color.setHex(0x00ff00);
+        this.colorize(0x00ff00);
     }
 
     onEnemyCapture() {
@@ -90,8 +93,7 @@ export default class Node extends Group {
         this.action.play();
         this.captured = true;
 
-        this.light.intensity = 2;
-        this.light.color.setHex(0xff0000);
+        this.colorize(0xff0000);
     }
 
     onFortify() {
@@ -105,7 +107,7 @@ export default class Node extends Group {
         this.isOwnedByPlayer = false;
         this.level = 1;
         this.label.updateLevel(this.level);
-        this.light.intensity = 0;
+        this.colorize(0x444444);
         this.attacked = true;
         setTimeout(() => this.attacked = false, 1000);
     }

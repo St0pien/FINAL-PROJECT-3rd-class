@@ -12,7 +12,7 @@ export default class StartPoint extends Group {
         this.mesh = new Mesh(this.geometry, this.material);
         this.add(this.mesh);
 
-        this.light = new PointLight(color, 4, 100);
+        this.light = new PointLight(color, 4, 150);
         this.light.position.set(0, 4, 0);
         this.add(this.light);
 

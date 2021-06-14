@@ -60,9 +60,9 @@ a:hover {
 
 .form {
     position: absolute;
-    top: 40%;
+    top: calc(150px + 10%);
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%);
     width: 40%;
     height: 50%;
     display: flex;
@@ -87,12 +87,13 @@ a:hover {
     outline: none;
     color: white;
     text-align: center;
+    min-width: 200px;
     width: 40%;
     transition: width .5s ease-in-out;
 }
 
 .input:focus {
-    width: 50%;
+    width: calc(40% + 100px);
 }
 
 .input:nth-child(odd) {
